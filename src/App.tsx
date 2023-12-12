@@ -1,29 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import './App.css'
+import { demo } from './interface'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [demo, setDemo] = useState<demo[]>([])
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+      console.log(response)
+
+      setDemo(response.data)
+    } catch (error) {
+      // handle error
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Minh gà</h1>
+      <h1>Minh Hoc Gioi vcut</h1>
       <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>title</th>
+              {/* Thêm các cột khác tùy theo dữ liệu bạn nhận từ API */}
+            </tr>
+          </thead>
+          <tbody>
+            {demo.map((item) => (
+              <tr key={item.id}>
+                <td>{item.userId}</td>
+                <td>{item.title}</td>
+                {/* Render các cột dữ liệu khác tương tự */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
     </>
   )
 }
